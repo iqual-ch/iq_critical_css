@@ -1,0 +1,7 @@
+iq_critical_css.settings:
+  path: '/admin/config/development/performance/critical-css'
+  defaults:
+    _form: \Drupal\iq_critical_css\Form\SettingsForm
+    _title: 'Critical CSS: Settings'
+  requirements:
+    _permission: 'administer site configuration'

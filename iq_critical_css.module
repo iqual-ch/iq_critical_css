@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Contains iq_critical_css.module.
+ */
+
+use Drupal\Core\Render\Markup;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function iq_critical_css_page_attachments(array &$page) {
+
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+
+    // Get global critical CSS.
+    $config = \Drupal::config('iq_critical_css.settings');
+    $criticalCSS = '';
+
+    foreach (explode("\n", $config->get('critical_css_files')) as $file) {
+      if (file_exists(trim(DRUPAL_ROOT . $file))) {
+        $criticalCSS .= file_get_contents(trim(DRUPAL_ROOT . $file));
+      }
+      else {
+        $criticalCSS .= file_get_contents(trim($file));
+      }
+    }
+
+    $criticalCSS .= $config->get('critical_css_code');
+
+    $criticalCSS = str_replace("\n", "", $criticalCSS);
+    $criticalCSS = str_replace(" ", "", $criticalCSS);
+    $criticalCSS = preg_replace("/([0-9]*px(?!;))/", "$1 ", $criticalCSS);
+
+    $page['#attached']['html_head'][] = [[
+      '#type' => 'html_tag',
+      '#tag' => 'style',
+      '#attributes' => ['id' => 'critical-css'],
+      '#value' => Markup::create($criticalCSS),
+      '#weight' => -10,
+    ],
+      'critical_css',
+    ];
+  }
+
+}

@@ -1,0 +1,5 @@
+name: 'iq_critical_css'
+type: module
+description: 'Critical CSS definition for pagespeed optimizations'
+core: 8.x
+package: 'iqual Critical CSS'
